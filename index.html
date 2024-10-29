@@ -13,15 +13,13 @@
 <body>
     <!-- Description and Diagram Section -->
     <h1>GitHub Pages Project with Form Handling</h1>
-    <p>This project demonstrates a flow where users sign in with GitHub, submit a form, and process data using GitHub Actions.</p>
+    <p>This project demonstrates a flow where users sign in with GitHub and submit a form on the callback page.</p>
 
     <!-- Diagram -->
     <div class="mermaid">
         graph TD;
           Start[Visitor Views Page] --> SignIn[Sign In with GitHub];
-          SignIn --> FormSubmit[Submit Form];
-          FormSubmit --> GitHubMachine[GitHub Machine Processes Data];
-          GitHubMachine --> End[Process Complete];
+          SignIn --> End[Process Complete];
     </div>
 
     <!-- Sign In with GitHub -->
@@ -31,8 +29,8 @@
 
     <script>
         function signInWithGitHub() {
-            const clientId = 'YOUR_CLIENT_ID';
-            const redirectUri = window.location.href;
+            const clientId = 'YOUR_CLIENT_ID'; // Replace with your actual Client ID
+            const redirectUri = 'https://username.github.io/repository-name/callback.html'; // Update with the callback URL
             const scope = 'user';
 
             // Redirect user to GitHub's OAuth page
@@ -48,25 +46,6 @@
             // Use this token to authorize form submissions if necessary
         }
     </script>
-
-    <!-- Form Section -->
-    <h2>Submit Data Form</h2>
-    <p>Fill out this form to submit data for processing. This form uses Formspree to capture submissions.</p>
-
-    <form action="https://formspree.io/YOUR_FORM_ID" method="POST">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="_replyto" required>
-
-        <label for="message">Message:</label>
-        <textarea id="message" name="message" required></textarea>
-
-        <button type="submit">Submit</button>
-    </form>
-
-    <p>Once submitted, GitHub Actions will process this data.</p>
 
     <!-- Footer -->
     <footer>
