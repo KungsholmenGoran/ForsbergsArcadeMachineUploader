@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Pages Website</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        // Initialize Mermaid for flowchart
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</head>
+<body>
+    <!-- Description and Diagram Section -->
+    <h1>GitHub Pages Project with Form Handling</h1>
+    <p>This project demonstrates a flow where users sign in with GitHub, submit a form, and process data using GitHub Actions.</p>
+
+    <!-- Diagram -->
+    <div class="mermaid">
+        graph TD;
+          Start[Visitor Views Page] --> SignIn[Sign In with GitHub];
+          SignIn --> FormSubmit[Submit Form];
+          FormSubmit --> GitHubMachine[GitHub Machine Processes Data];
+          GitHubMachine --> End[Process Complete];
+    </div>
+
+    <!-- Sign In with GitHub -->
+    <h2>Sign In with GitHub</h2>
+    <p>Click below to sign in with GitHub. This redirects to GitHub for OAuth authentication.</p>
+    <button onclick="signInWithGitHub()">Sign in with GitHub</button>
+
+    <script>
+        function signInWithGitHub() {
+            const clientId = 'YOUR_CLIENT_ID';
+            const redirectUri = window.location.href;
+            const scope = 'user';
+
+            // Redirect user to GitHub's OAuth page
+            window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}`;
+        }
+
+        // Handle GitHub redirect with code in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        if (code) {
+            // Here you'd normally exchange the code for a token on your server
+            console.log("OAuth code received:", code);
+            // Use this token to authorize form submissions if necessary
+        }
+    </script>
+
+    <!-- Form Section -->
+    <h2>Submit Data Form</h2>
+    <p>Fill out this form to submit data for processing. This form uses Formspree to capture submissions.</p>
+
+    <form action="https://formspree.io/YOUR_FORM_ID" method="POST">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="_replyto" required>
+
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" required></textarea>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <p>Once submitted, GitHub Actions will process this data.</p>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 GitHub Pages Project</p>
+    </footer>
+</body>
+</html>
