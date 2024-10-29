@@ -2,61 +2,103 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Callback Page - GitHub Authentication</title>
-    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-    <script>
-        // Initialize Mermaid for flowchart
-        mermaid.initialize({ startOnLoad: true });
-    </script>
+    <meta name="viewport" content="width=device-width, initial-scale: 1.0">
+    <title>Callback Page</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS if needed -->
 </head>
 <body>
-    <!-- Description and Diagram Section -->
-    <h1>Welcome Back!</h1>
-    <p>You have successfully signed in with GitHub.</p>
+    <h1>Callback Page</h1>
+    <p>This page handles the GitHub OAuth callback and includes several project-related features.</p>
 
-    <!-- Diagram -->
-    <div class="mermaid">
-        graph TD;
-          Start[Visitor Views Page] --> SignIn[Sign In with GitHub];
-          SignIn --> FormSubmit[Submit Form];
-          FormSubmit --> GitHubMachine[GitHub Machine Processes Data];
-          GitHubMachine --> End[Process Complete];
-    </div>
+    <!-- Repository Git URL -->
+    <h2>Repository Git URL</h2>
+    <p>Enter your repository URL below:</p>
+    <input type="text" id="repoUrl" placeholder="https://github.com/username/repo.git" />
 
-    <!-- Form Section -->
-    <h2>Submit Data Form</h2>
-    <p>Fill out this form to submit data for processing. This form uses Formspree to capture submissions.</p>
-
-    <form action="https://formspree.io/YOUR_FORM_ID" method="POST"> <!-- Replace with your Formspree ID -->
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="_replyto" required>
-
-        <label for="message">Message:</label>
-        <textarea id="message" name="message" required></textarea>
-
-        <button type="submit">Submit</button>
-    </form>
-
-    <p>Once submitted, GitHub Actions will process this data.</p>
+    <!-- Function to Request Repository Access -->
+    <h2>Grant Repository Access</h2>
+    <p>Use the button below to request access to your repository:</p>
+    <button onclick="requestRepoAccess()">Request Access</button>
 
     <script>
-        // Handle GitHub redirect with code in URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get('code');
-        if (code) {
-            console.log("OAuth code received:", code);
-            // Here you would exchange the code for a token on your server
-            // Then you can display the token or save it for future API calls
+        function requestRepoAccess() {
+            // Functionality to grant access to your GitHub repository
+            // Implement GitHub API calls or other mechanisms here
+            console.log("Requesting access to the repository...");
+            alert("Access request sent!"); // Placeholder for feedback
+        }
+    </script>
+
+    <!-- Team Members Section -->
+    <h2>Team Members</h2>
+    <ul id="teamMembersList">
+        <!-- Existing team members can be added here dynamically -->
+    </ul>
+    <button onclick="addTeamMember()">Add Team Member</button>
+
+    <script>
+        function addTeamMember() {
+            const list = document.getElementById("teamMembersList");
+            const newMember = document.createElement("li");
+
+            // Create input fields for the new team member
+            newMember.innerHTML = `
+                Name: <input type="text" placeholder="Member Name" />
+                Role: <input type="text" placeholder="Role" />
+                Percentage Cut: <input type="number" min="0" max="100" placeholder="Cut (%)" />
+                <button onclick="removeMember(this)">Remove</button>
+            `;
+            list.appendChild(newMember);
+        }
+
+        function removeMember(button) {
+            const listItem = button.parentElement;
+            listItem.remove();
+        }
+    </script>
+
+    <!-- Public Team Page -->
+    <h2>Public Team Page</h2>
+    <p>Visit our team page: <a href="https://yourteam.github.io" target="_blank">Public Team Page</a></p>
+
+    <!-- Public Game Page -->
+    <h2>Public Game Page</h2>
+    <p>Check out our game: <a href="https://yourgame.github.io" target="_blank">Public Game Page</a></p>
+
+    <!-- Payment Receiving Address Section -->
+    <h2>Payment Receiving Address</h2>
+    <ul id="paymentList">
+        <li>
+            Address: <input type="text" placeholder="Payment Address" />
+            Percentage Cut: <input type="number" min="0" max="100" placeholder="Cut (%)" />
+            <button onclick="removePaymentField(this)">Remove</button>
+        </li>
+    </ul>
+    <button onclick="addPaymentField()">Add Payment Address</button>
+
+    <script>
+        function addPaymentField() {
+            const list = document.getElementById("paymentList");
+            const newField = document.createElement("li");
+
+            // Create input fields for the new payment address
+            newField.innerHTML = `
+                Address: <input type="text" placeholder="Payment Address" />
+                Percentage Cut: <input type="number" min="0" max="100" placeholder="Cut (%)" />
+                <button onclick="removePaymentField(this)">Remove</button>
+            `;
+            list.appendChild(newField);
+        }
+
+        function removePaymentField(button) {
+            const listItem = button.parentElement;
+            listItem.remove();
         }
     </script>
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2024 GitHub Pages Project</p>
+        <p>&copy; 2024 Project Callback Page</p>
     </footer>
 </body>
 </html>
