@@ -29,6 +29,40 @@
         }
     </script>
 
+    <!-- Dropdown for Available Repositories -->
+    <h2>Select Repository for Submodule</h2>
+    <p>Select a repository from the dropdown to give access to:</p>
+    <select id="repositoryDropdown">
+        <option value="">-- Select Repository --</option>
+        <option value="repo1">Repository 1</option>
+        <option value="repo2">Repository 2</option>
+        <option value="repo3">Repository 3</option>
+        <!-- Add options dynamically or manually as needed -->
+    </select>
+
+    <!-- GitHub Machine Configuration for Submodule -->
+    <h2>Add as Submodule Configuration</h2>
+    <p>Fill in the details below to add the selected repository as a submodule:</p>
+    <input type="text" id="submoduleName" placeholder="Submodule Name (e.g., my-submodule)" />
+    <input type="text" id="submodulePath" placeholder="Path in Repo (e.g., ./libs/my-submodule)" />
+    <button onclick="addSubmodule()">Add Submodule</button>
+
+    <script>
+        function addSubmodule() {
+            const selectedRepo = document.getElementById("repositoryDropdown").value;
+            const submoduleName = document.getElementById("submoduleName").value;
+            const submodulePath = document.getElementById("submodulePath").value;
+
+            if (selectedRepo && submoduleName && submodulePath) {
+                // Logic to add the selected repository as a submodule
+                console.log(`Adding ${selectedRepo} as submodule named ${submoduleName} at ${submodulePath}`);
+                alert(`Submodule ${submoduleName} added successfully!`);
+            } else {
+                alert("Please fill in all fields to add the submodule.");
+            }
+        }
+    </script>
+
     <!-- Team Members Section -->
     <h2>Team Members</h2>
     <ul id="teamMembersList">
