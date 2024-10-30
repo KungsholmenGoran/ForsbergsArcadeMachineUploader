@@ -8,7 +8,7 @@
 </head>
 <body>
     <h1>Upload page</h1>
-    <p>Here important fields are filled to integrate your game and metadata to the arcade machine</p>
+    <p>Here important fields are filled to integrate your game as well as eg pay recieval into the arcade machine system</p>
 
     <!-- Directory Description and Diagram -->
     <h2>Repository Structure Description</h2>
@@ -98,6 +98,43 @@
     <h2>Public Game Page</h2>
     <p>Check out our game: <a href="https://yourgame.github.io" target="_blank">Public Game Page</a></p>
 
+    <!-- Accepted Payment Options Section -->
+    <h2>Accepted Payment Options</h2>
+    <label>
+        <input type="checkbox" id="paypalOption" onchange="togglePayPalFields()"> PayPal
+    </label>
+
+    <!-- PayPal Receiver Details -->
+    <div id="paypalFields" style="display:none;">
+        <h3>PayPal Receiver Details</h3>
+        <button onclick="addPayPalReceiver()">Add Receiver</button>
+        <ul id="paypalReceiverList"></ul>
+    </div>
+
+    <script>
+        function togglePayPalFields() {
+            const paypalFields = document.getElementById("paypalFields");
+            paypalFields.style.display = document.getElementById("paypalOption").checked ? "block" : "none";
+        }
+
+        function addPayPalReceiver() {
+            const list = document.getElementById("paypalReceiverList");
+            const newReceiver = document.createElement("li");
+
+            newReceiver.innerHTML = `
+                Receiver Email: <input type="email" placeholder="Enter PayPal Email" />
+                Percentage Cut: <input type="number" min="0" max="100" placeholder="Cut (%)" />
+                <button onclick="removePayPalReceiver(this)">Remove</button>
+            `;
+            list.appendChild(newReceiver);
+        }
+
+        function removePayPalReceiver(button) {
+            const listItem = button.parentElement;
+            listItem.remove();
+        }
+    </script>
+
     <!-- Payment Receiving Address Section -->
     <h2>Payment Receiving Address</h2>
     <ul id="paymentList">
@@ -146,7 +183,7 @@
         }
     </script>
 
-    <!-- Input for Game Controller Support -->
+    <!-- Input Game Controller Support -->
     <h2>Input Game Controller Support</h2>
     <p>Select which is true:</p>
     <label>
@@ -157,32 +194,4 @@
     </label><br>
     <label>
         <input type="checkbox" id="joystickSupport"> Has joystick support
-    </label>
-
-    <!-- Button to Send to GitHub Machine -->
-    <h2>Send to GitHub Machine</h2>
-    <button onclick="sendToGitHubMachine()">Send Data</button>
-
-    <script>
-        function sendToGitHubMachine() {
-            const repoUrl = document.getElementById("repoUrl").value;
-            const submoduleName = document.getElementById("submoduleName").value;
-            const submodulePath = document.getElementById("submodulePath").value;
-            const gameControllerSupport = document.getElementById("gameControllerSupport").checked;
-            const mouseKeyboardSupport = document.getElementById("mouseKeyboardSupport").checked;
-            const joystickSupport = document.getElementById("joystickSupport").checked;
-
-            const teamMembers = Array.from(document.querySelectorAll("#teamMembersList li")).map(member => {
-                const name = member.querySelector('input[placeholder="Member Name"]').value;
-                const role = member.querySelector('input[placeholder="Role"]').value;
-                const cut = member.querySelector('input[placeholder="Cut (%)"]').value;
-                return { name, role, cut };
-            });
-
-            const paymentAddresses = Array.from(document.querySelectorAll("#paymentList li")).map(address => {
-                const paymentAddress = address.querySelector('input[placeholder="Payment Address"]').value;
-                const cut = address.querySelector('input[placeholder="Cut (%)"]').value;
-                return { paymentAddress, cut };
-            });
-
-            //
+    </
