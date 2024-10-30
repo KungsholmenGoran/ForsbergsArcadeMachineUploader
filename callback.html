@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Callback Page</title>
+    <title>Upload page</title>
     <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS if needed -->
 </head>
 <body>
@@ -126,6 +126,23 @@
         function removePaymentField(button) {
             const listItem = button.parentElement;
             listItem.remove();
+        }
+    </script>
+
+    <!-- Pay What You Want Option -->
+    <h2>Pay What You Want</h2>
+    <label>
+        <input type="checkbox" id="payWhatYouWantCheckbox" onchange="togglePayWhatYouWantFields()"> Enable Pay What You Want
+    </label>
+    <div id="payWhatYouWantFields" style="display:none;">
+        <p>Minimum Payment Amount: <input type="number" id="minPayment" placeholder="Enter minimum amount" /></p>
+    </div>
+
+    <script>
+        function togglePayWhatYouWantFields() {
+            const checkbox = document.getElementById("payWhatYouWantCheckbox");
+            const fields = document.getElementById("payWhatYouWantFields");
+            fields.style.display = checkbox.checked ? "block" : "none";
         }
     </script>
 
