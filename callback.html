@@ -75,22 +75,6 @@
     <input type="text" id="submodulePath" placeholder="Path in Repo (e.g., ./libs/my-submodule)" />
     <button onclick="addSubmodule()">Add Submodule</button>
 
-    <script>
-        function addSubmodule() {
-            const selectedRepo = document.getElementById("repositoryDropdown").value;
-            const submoduleName = document.getElementById("submoduleName").value;
-            const submodulePath = document.getElementById("submodulePath").value;
-
-            if (selectedRepo && submoduleName && submodulePath) {
-                // Logic to add the selected repository as a submodule
-                console.log(`Adding ${selectedRepo} as submodule named ${submoduleName} at ${submodulePath}`);
-                alert(`Submodule ${submoduleName} added successfully!`);
-            } else {
-                alert("Please fill in all fields to add the submodule.");
-            }
-        }
-    </script>
-
     <!-- Team Members Section -->
     <h2>Team Members</h2>
     <ul id="teamMembersList">
