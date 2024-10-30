@@ -3,112 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Page</title>
+    <title>Forsbergs Arcade Machine Game Integration System - Callback Page</title>
     <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS if needed -->
 </head>
 <body>
-    <h1>Upload Page</h1>
-    <p>Here important fields are filled to integrate your game as well as payment receipt into the arcade machine system.</p>
+    <h1>Forsbergs Arcade Machine Game Integration System - Callback Page</h1>
 
-    <!-- Directory Description and Diagram -->
-    <h2>Repository Structure Description</h2>
-    <p>You could make a repository of your built game directory, but make sure to match the following:</p>
-    <p>Make sure to build your game for the Windows platform.</p>
-    <p>The name of the repository will serve as the name of your game in the arcade machine launcher, so be sure to use capital letters if needed.</p>
-    <p>The directory should include:</p>
-    <ul>
-        <li>The .exe file and any additional game binaries (the files generated in the build directory).</li>
-        <li>The license for your game.</li>
-        <li>One .gif file of your game, serving as part of your arcade machine presentation.</li>
-        <li>(Optional) A folder named "Demo" including a similar Windows build and license structure for your demo version, which will be free to play (but not replay).</li>
-    </ul>
+    <!-- Description Section -->
+    <h2>Description</h2>
+    <p>Follow these steps to integrate your game into the arcade machine:</p>
+    <ol>
+        <li>Select your game repository.</li>
+        <li>Provide detailed metadata for your game, including contributors and payment information (if applicable).</li>
+        <li>Submit, and a request for repository access will be sent to me.</li>
+        <li>Upon acceptance, GitHub Actions will generate and push a <code>metadata.json</code> file to your repository, making your game available on the arcade machine.</li>
+    </ol>
+    <p><strong>Note:</strong> No <code>metadata.json</code> = no game availability at the arcade machine!</p>
 
-    <!-- Add Repository Section -->
-    <h2>Add Repository</h2>
-    <p>Select your repository from the list below:</p>
+    <!-- Select Repository Section -->
+    <h2>Select Repository</h2>
+    <p>Choose your game repository:</p>
     <select id="repositoryList">
         <option value="">-- Loading Repositories --</option>
     </select>
 
-    <!-- Add Metadata to Repository Section -->
-    <h2>Add Metadata to Repository</h2>
-    <p>Fill in the details below to add metadata to the selected repository:</p>
-    <input type="text" id="gameTitle" placeholder="Game Title" />
-    <input type="text" id="gameDescription" placeholder="Game Description" />
-    <input type="text" id="teamMembers" placeholder="Team Members (comma-separated)" />
-    <input type="text" id="paymentInfo" placeholder="Payment Information" />
-    <button onclick="addMetadata()">Add Metadata</button>
+    <!-- Add Metadata Section -->
+    <h2>Add Metadata</h2>
+    <label>Contributors (comma-separated names/aliases and roles, e.g., "Alex - UI, Jamie - Sound")</label>
+    <input type="text" id="contributors" placeholder="Contributors">
+    
+    <label><input type="checkbox" id="isFreeToPlay"> Is Free to Play</label>
+    
+    <div id="paymentDetails" style="display: none;">
+        <label>Select Payment Platform:</label>
+        <select id="paymentPlatform">
+            <option value="paypal">PayPal</option>
+            <option value="stripe">Stripe</option>
+        </select>
 
+        <div id="payoutDetails">
+            <label>Contributor Payouts:</label>
+            <div id="contributorsPayout">
+                <!-- Dynamic fields generated here for each contributor -->
+            </div>
+            <button onclick="addContributorPayout()">Add Contributor</button>
+            
+            <label>(Optional) Launcher Contributors Payout</label>
+            <input type="number" placeholder="Launcher Contributors Percentage">
+
+            <label>(Optional) Support a Cause</label>
+            <input type="text" placeholder="Organization Name">
+            <input type="text" placeholder="Account Details">
+        </div>
+
+        <p><strong>Note:</strong> Total cut percentage must add up to 100%. Remaining: <span id="remainingPercentage">100</span>%</p>
+    </div>
+
+    <label>Game Website URL</label>
+    <input type="url" id="gameWebsite" placeholder="Game Website URL">
+
+    <label>Game Presentation (max 100 characters)</label>
+    <textarea id="gamePresentation" maxlength="100"></textarea>
+    <span id="charCount">0/100</span>
+
+    <label>Age Requirement</label>
+    <input type="number" id="ageRequirement" min="0" placeholder="Enter age requirement">
+    <label><input type="checkbox" id="allAges"> Playable for All Ages</label>
+
+    <label>Category (Add up to 6)</label>
+    <div id="categoryList">
+        <input type="text" class="categoryInput" placeholder="Add category">
+    </div>
+    <button onclick="addCategory()">Add Another Category</button>
+
+    <label><input type="checkbox" id="multiplayerSupport"> Multiplayer Support</label>
+    <div id="maxPlayers" style="display: none;">
+        <label>Max Players</label>
+        <input type="number" id="playerCount" min="1">
+    </div>
+
+    <label><input type="checkbox" id="singlePlayerSupport"> Single Player Support</label>
+
+    <label>Supported Accessories:</label>
+    <div>
+        <label><input type="checkbox" id="gamepad"> GamePad</label>
+        <label><input type="checkbox" id="keyboardMouse"> Keyboard/Mouse</label>
+        <label><input type="checkbox" id="joystick"> Joystick</label>
+        <label><input type="checkbox" id="vr"> VR</label>
+        <label><input type="checkbox" id="otherAccessory"> Other</label>
+        <input type="text" id="otherAccessoryDetails" style="display: none;" placeholder="Please specify">
+    </div>
+
+    <label>Version Number</label>
+    <input type="text" id="versionNumber" placeholder="Version number (e.g., 1.0)">
+
+    <p><strong>Reminder:</strong> Accept the <code>metadata.json</code> pull request or push from me.</p>
+    
+    <button onclick="submitMetadata()">Finish</button>
+
+    <!-- JavaScript to Handle Form Logic -->
     <script>
-        // Function to fetch user's repositories from GitHub
-        async function fetchRepositories() {
-            const token = 'YOUR_GITHUB_TOKEN'; // Replace with your GitHub token
-            const url = 'https://api.github.com/user/repos';
+        // Toggle payment form based on Free-to-Play checkbox
+        document.getElementById("isFreeToPlay").addEventListener("change", function() {
+            document.getElementById("paymentDetails").style.display = this.checked ? "none" : "block";
+        });
 
-            try {
-                const response = await fetch(url, {
-                    headers: {
-                        'Authorization': `token ${token}`
-                    }
-                });
+        // Show max players field if Multiplayer is checked
+        document.getElementById("multiplayerSupport").addEventListener("change", function() {
+            document.getElementById("maxPlayers").style.display = this.checked ? "block" : "none";
+        });
 
-                if (!response.ok) {
-                    throw new Error('Failed to fetch repositories');
-                }
+        // Show additional input if Other accessory is selected
+        document.getElementById("otherAccessory").addEventListener("change", function() {
+            document.getElementById("otherAccessoryDetails").style.display = this.checked ? "inline" : "none";
+        });
 
-                const repos = await response.json();
-                const repoList = document.getElementById("repositoryList");
+        // Update character count for game presentation
+        document.getElementById("gamePresentation").addEventListener("input", function() {
+            document.getElementById("charCount").textContent = `${this.value.length}/100`;
+        });
 
-                // Clear existing options
-                repoList.innerHTML = '';
-                repoList.appendChild(new Option('-- Select Repository --', ''));
-
-                // Populate dropdown with repositories
-                repos.forEach(repo => {
-                    const option = new Option(repo.name, repo.full_name); // repo.full_name for API operations
-                    repoList.appendChild(option);
-                });
-            } catch (error) {
-                console.error('Error fetching repositories:', error);
+        // Function to add categories
+        function addCategory() {
+            const categoryList = document.getElementById("categoryList");
+            if (categoryList.children.length < 6) {
+                const input = document.createElement("input");
+                input.type = "text";
+                input.className = "categoryInput";
+                input.placeholder = "Add category";
+                categoryList.appendChild(input);
             }
         }
 
-        // Call the function to fetch repositories on page load
-        window.onload = fetchRepositories;
-
-        function addMetadata() {
-            const title = document.getElementById("gameTitle").value;
-            const description = document.getElementById("gameDescription").value;
-            const team = document.getElementById("teamMembers").value;
-            const payment = document.getElementById("paymentInfo").value;
-
-            const metadata = {
-                title: title,
-                description: description,
-                team: team.split(',').map(member => member.trim()), // Convert string to array
-                payment: payment
-            };
-
-            console.log("Metadata to be sent:", metadata);
-            alert("Metadata added successfully!");
+        // Dummy function to log metadata submission
+        function submitMetadata() {
+            console.log("Submitting metadata...");
+            alert("Metadata submitted successfully!");
         }
-    </script>
 
-    <!-- Final Step: Upload Section -->
-    <h2>(Final Step) Upload</h2>
-    <p>Use the button below to upload your repository along with the metadata, and grant me access to the repository (so I can use your game repo as a submodule in the arcade machine launcher):</p>
-    <button onclick="uploadRepository()">Upload to GitHub</button>
-
-    <script>
-        function uploadRepository() {
-            console.log("Uploading repository...");
-            alert("Repository uploaded successfully!"); // Placeholder for feedback
-        }
+        // Add functions to dynamically generate contributor payouts, handle payment, etc.
     </script>
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2024 Project Callback Page</p>
+        <p>&copy; 2024 Forsbergs Arcade Machine Game Integration System</p>
     </footer>
 </body>
 </html>
