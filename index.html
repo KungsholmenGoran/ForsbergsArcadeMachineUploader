@@ -9,6 +9,11 @@
         const CLIENT_ID = "Ov23lixSdUneuispdkKO"; // Replace with your GitHub OAuth app's client ID
         const REDIRECT_URI = "https://sibjor.github.io/ForsbergsArcadeMachineUploader/callback.html"; // Replace with the callback URL specified in your GitHub app
 
+        function authenticateWithGitHub() {
+            const authUrl = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`;
+            window.location.href = authUrl;
+        }
+
         // Initialize Mermaid for the diagram
         document.addEventListener("DOMContentLoaded", () => {
             mermaid.initialize({ startOnLoad: true });
@@ -25,8 +30,6 @@
 <body>
     <h1>Forsbergs Arcade Machine Game Integration System</h1>
     <p>Welcome to the Game Integration System. Authenticate with GitHub to manage your repositories. If your game isn't free to play, have account details ready for your chosen payment options: PayPal or Stripe (for all contributors and possible charities).</p>
-
-    <button onclick="authenticateWithGitHub()">Authenticate with GitHub to Continue</button>
 
     <h2>System Overview</h2>
     <div class="mermaid">
@@ -75,10 +78,7 @@
     <h3>Updating Your Game</h3>
     <p>To update your game, rebuild it, replace the files in your repository, and push the changes.</p>
 
-    function authenticateWithGitHub() {
-            const authUrl = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`;
-            window.location.href = authUrl;
-        }
+    <button onclick="authenticateWithGitHub()">Authenticate with GitHub to Continue</button>
 
     <footer>
         <p>&copy; 2024 https://github.com/sibjor</p>
