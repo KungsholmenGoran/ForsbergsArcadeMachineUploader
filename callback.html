@@ -3,195 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload page</title>
+    <title>Upload Page</title>
     <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS if needed -->
 </head>
 <body>
-    <h1>Upload page</h1>
-    <p>Here important fields are filled to integrate your game as well as eg pay recieval into the arcade machine system</p>
+    <h1>Upload Page</h1>
+    <p>Here important fields are filled to integrate your game as well as payment receipt into the arcade machine system.</p>
 
     <!-- Directory Description and Diagram -->
     <h2>Repository Structure Description</h2>
     <p>You could make a repository of your built game directory, but make sure to match the following:</p>
-    <p>Make sure to build your game for Windows platform</p>
+    <p>Make sure to build your game for the Windows platform.</p>
     <p>The name of the repository will serve as the name of your game in the arcade machine launcher, so be sure to use capital letters if needed.</p>
     <p>The directory should include:</p>
     <ul>
         <li>The .exe file and any additional game binaries (the files generated in the build directory).</li>
         <li>The license for your game.</li>
         <li>One .gif file of your game, serving as part of your arcade machine presentation.</li>
-        <li>(Optional) A folder named "Demo" including a similar Windows build and license structure for your demo version, which will be free to play (but not replay)</li>
+        <li>(Optional) A folder named "Demo" including a similar Windows build and license structure for your demo version, which will be free to play (but not replay).</li>
     </ul>
 
-    <p>A GitHub machine generated .json file will be pushed/requested from my account/github machine adding the metadata for your game you fill on this page, including team members, description, payment/donation receiving addresses and cuts, e.g., booleans "isFree," and so on. You can manually edit this file to include desired outcomes, just remember to push.</p>
-    <p>If something goes wrong, or decisions are made from above, e.g., the school, I will notify you all through the email associated with the account you used for the OAuth.</p>
-
-    <!-- Repository Git URL -->
-    <h2>Repository Git URL</h2>
-    <p>Enter your repository URL below:</p>
-    <input type="text" id="repoUrl" placeholder="https://github.com/username/repo.git" />
-
-    <!-- Function to Request Repository Access -->
-    <h2>Grant Repository Access</h2>
-    <p>Use the button below to request access to your repository:</p>
-    <button onclick="requestRepoAccess()">Request Access</button>
-
-    <script>
-        function requestRepoAccess() {
-            // Functionality to grant access to your GitHub repository
-            console.log("Requesting access to the repository...");
-            alert("Access request sent!"); // Placeholder for feedback
-        }
-    </script>
-
-    <!-- Dropdown for Available Repositories -->
-    <h2>Select Repository for Submodule</h2>
-    <p>Select a repository from the dropdown to give access to:</p>
-    <select id="repositoryDropdown">
-        <option value="">-- Select Repository --</option>
-        <option value="repo1">Repository 1</option>
-        <option value="repo2">Repository 2</option>
-        <option value="repo3">Repository 3</option>
-        <!-- Add options dynamically or manually as needed -->
+    <!-- Add Repository Section -->
+    <h2>Add Repository</h2>
+    <p>Select your repository from the list below:</p>
+    <select id="repositoryList">
+        <option value="">-- Loading Repositories --</option>
     </select>
 
-    <!-- GitHub Machine Configuration for Submodule -->
-    <h2>Add as Submodule Configuration</h2>
-    <p>Fill in the details below to add the selected repository as a submodule:</p>
-    <input type="text" id="submoduleName" placeholder="Submodule Name (e.g., my-submodule)" />
-    <input type="text" id="submodulePath" placeholder="Path in Repo (e.g., ./libs/my-submodule)" />
-    <button onclick="addSubmodule()">Add Submodule</button>
-
-    <!-- Team Members Section -->
-    <h2>Team Members</h2>
-    <ul id="teamMembersList">
-        <!-- Existing team members can be added here dynamically -->
-    </ul>
-    <button onclick="addTeamMember()">Add Team Member</button>
+    <!-- Add Metadata to Repository Section -->
+    <h2>Add Metadata to Repository</h2>
+    <p>Fill in the details below to add metadata to the selected repository:</p>
+    <input type="text" id="gameTitle" placeholder="Game Title" />
+    <input type="text" id="gameDescription" placeholder="Game Description" />
+    <input type="text" id="teamMembers" placeholder="Team Members (comma-separated)" />
+    <input type="text" id="paymentInfo" placeholder="Payment Information" />
+    <button onclick="addMetadata()">Add Metadata</button>
 
     <script>
-        function addTeamMember() {
-            const list = document.getElementById("teamMembersList");
-            const newMember = document.createElement("li");
+        // Function to fetch user's repositories from GitHub
+        async function fetchRepositories() {
+            const token = 'YOUR_GITHUB_TOKEN'; // Replace with your GitHub token
+            const url = 'https://api.github.com/user/repos';
 
-            // Create input fields for the new team member
-            newMember.innerHTML = `
-                Name: <input type="text" placeholder="Member Name" />
-                Role: <input type="text" placeholder="Role" />
-                Percentage Cut: <input type="number" min="0" max="100" placeholder="Cut (%)" />
-                <button onclick="removeMember(this)">Remove</button>
-            `;
-            list.appendChild(newMember);
+            try {
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `token ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch repositories');
+                }
+
+                const repos = await response.json();
+                const repoList = document.getElementById("repositoryList");
+
+                // Clear existing options
+                repoList.innerHTML = '';
+                repoList.appendChild(new Option('-- Select Repository --', ''));
+
+                // Populate dropdown with repositories
+                repos.forEach(repo => {
+                    const option = new Option(repo.name, repo.full_name); // repo.full_name for API operations
+                    repoList.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error fetching repositories:', error);
+            }
         }
 
-        function removeMember(button) {
-            const listItem = button.parentElement;
-            listItem.remove();
+        // Call the function to fetch repositories on page load
+        window.onload = fetchRepositories;
+
+        function addMetadata() {
+            const title = document.getElementById("gameTitle").value;
+            const description = document.getElementById("gameDescription").value;
+            const team = document.getElementById("teamMembers").value;
+            const payment = document.getElementById("paymentInfo").value;
+
+            const metadata = {
+                title: title,
+                description: description,
+                team: team.split(',').map(member => member.trim()), // Convert string to array
+                payment: payment
+            };
+
+            console.log("Metadata to be sent:", metadata);
+            alert("Metadata added successfully!");
         }
     </script>
 
-    <!-- Public Team Page -->
-    <h2>Public Team Page</h2>
-    <p>Visit our team page: <a href="https://yourteam.github.io" target="_blank">Public Team Page</a></p>
-
-    <!-- Public Game Page -->
-    <h2>Public Game Page</h2>
-    <p>Check out our game: <a href="https://yourgame.github.io" target="_blank">Public Game Page</a></p>
-
-    <!-- Accepted Payment Options Section -->
-    <h2>Accepted Payment Options</h2>
-    <label>
-        <input type="checkbox" id="paypalOption" onchange="togglePayPalFields()"> PayPal
-    </label>
-
-    <!-- PayPal Receiver Details -->
-    <div id="paypalFields" style="display:none;">
-        <h3>PayPal Receiver Details</h3>
-        <button onclick="addPayPalReceiver()">Add Receiver</button>
-        <ul id="paypalReceiverList"></ul>
-    </div>
+    <!-- Final Step: Upload Section -->
+    <h2>(Final Step) Upload</h2>
+    <p>Use the button below to upload your repository along with the metadata, and grant me access to the repository (so I can use your game repo as a submodule in the arcade machine launcher):</p>
+    <button onclick="uploadRepository()">Upload to GitHub</button>
 
     <script>
-        function togglePayPalFields() {
-            const paypalFields = document.getElementById("paypalFields");
-            paypalFields.style.display = document.getElementById("paypalOption").checked ? "block" : "none";
-        }
-
-        function addPayPalReceiver() {
-            const list = document.getElementById("paypalReceiverList");
-            const newReceiver = document.createElement("li");
-
-            newReceiver.innerHTML = `
-                Receiver Email: <input type="email" placeholder="Enter PayPal Email" />
-                Percentage Cut: <input type="number" min="0" max="100" placeholder="Cut (%)" />
-                <button onclick="removePayPalReceiver(this)">Remove</button>
-            `;
-            list.appendChild(newReceiver);
-        }
-
-        function removePayPalReceiver(button) {
-            const listItem = button.parentElement;
-            listItem.remove();
+        function uploadRepository() {
+            console.log("Uploading repository...");
+            alert("Repository uploaded successfully!"); // Placeholder for feedback
         }
     </script>
 
-    <!-- Payment Receiving Address Section -->
-    <h2>Payment Receiving Address</h2>
-    <ul id="paymentList">
-        <li>
-            Address: <input type="text" placeholder="Payment Address" />
-            Percentage Cut: <input type="number" min="0" max="100" placeholder="Cut (%)" />
-            <button onclick="removePaymentField(this)">Remove</button>
-        </li>
-    </ul>
-    <button onclick="addPaymentField()">Add Payment Address</button>
-
-    <script>
-        function addPaymentField() {
-            const list = document.getElementById("paymentList");
-            const newField = document.createElement("li");
-
-            // Create input fields for the new payment address
-            newField.innerHTML = `
-                Address: <input type="text" placeholder="Payment Address" />
-                Percentage Cut: <input type="number" min="0" max="100" placeholder="Cut (%)" />
-                <button onclick="removePaymentField(this)">Remove</button>
-            `;
-            list.appendChild(newField);
-        }
-
-        function removePaymentField(button) {
-            const listItem = button.parentElement;
-            listItem.remove();
-        }
-    </script>
-
-    <!-- Pay What You Want Option -->
-    <h2>Pay What You Want</h2>
-    <label>
-        <input type="checkbox" id="payWhatYouWantCheckbox" onchange="togglePayWhatYouWantFields()"> Enable Pay What You Want
-    </label>
-    <div id="payWhatYouWantFields" style="display:none;">
-        <p>Minimum Payment Amount: <input type="number" id="minPayment" placeholder="Enter minimum amount" /></p>
-    </div>
-
-    <script>
-        function togglePayWhatYouWantFields() {
-            const checkbox = document.getElementById("payWhatYouWantCheckbox");
-            const fields = document.getElementById("payWhatYouWantFields");
-            fields.style.display = checkbox.checked ? "block" : "none";
-        }
-    </script>
-
-    <!-- Input Game Controller Support -->
-    <h2>Input Game Controller Support</h2>
-    <p>Select which is true:</p>
-    <label>
-        <input type="checkbox" id="gameControllerSupport"> Has game controller support
-    </label><br>
-    <label>
-        <input type="checkbox" id="mouseKeyboardSupport"> Has mouse/keyboard support
-    </label><br>
-    <label>
-        <input type="checkbox" id="joystickSupport"> Has joystick support
-    </
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Project Callback Page</p>
+    </footer>
+</body>
+</html>
