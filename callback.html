@@ -26,19 +26,6 @@
     <p>A GitHub machine generated .json file will be pushed/requested from my account/github machine adding the metadata for your game you fill on this page, including team members, description, payment/donation receiving addresses and cuts, e.g., booleans "isFree," and so on. You can manually edit this file to include desired outcomes, just remember to push.</p>
     <p>If something goes wrong, or decisions are made from above, e.g., the school, I will notify you all through the email associated with the account you used for the OAuth.</p>
 
-    <!-- Input Support Section -->
-    <h2>Select Input Support</h2>
-    <p>Select which is true:</p>
-    <label>
-        <input type="checkbox" id="gameControllerSupport"> Has game controller support
-    </label><br>
-    <label>
-        <input type="checkbox" id="mouseKeyboardSupport"> Has mouse/keyboard support
-    </label><br>
-    <label>
-        <input type="checkbox" id="joystickSupport"> Has joystick support
-    </label><br>
-
     <!-- Repository Git URL -->
     <h2>Repository Git URL</h2>
     <p>Enter your repository URL below:</p>
@@ -46,13 +33,12 @@
 
     <!-- Function to Request Repository Access -->
     <h2>Grant Repository Access</h2>
-    <p>Use the button below to request access to your repository (so I can integrate your game as a submodule of the launcher)</p>
+    <p>Use the button below to request access to your repository:</p>
     <button onclick="requestRepoAccess()">Request Access</button>
 
     <script>
         function requestRepoAccess() {
             // Functionality to grant access to your GitHub repository
-            // Implement GitHub API calls or other mechanisms here
             console.log("Requesting access to the repository...");
             alert("Access request sent!"); // Placeholder for feedback
         }
@@ -160,9 +146,43 @@
         }
     </script>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2024 Project Callback Page</p>
-    </footer>
-</body>
-</html>
+    <!-- Input for Game Controller Support -->
+    <h2>Input Game Controller Support</h2>
+    <p>Select which is true:</p>
+    <label>
+        <input type="checkbox" id="gameControllerSupport"> Has game controller support
+    </label><br>
+    <label>
+        <input type="checkbox" id="mouseKeyboardSupport"> Has mouse/keyboard support
+    </label><br>
+    <label>
+        <input type="checkbox" id="joystickSupport"> Has joystick support
+    </label>
+
+    <!-- Button to Send to GitHub Machine -->
+    <h2>Send to GitHub Machine</h2>
+    <button onclick="sendToGitHubMachine()">Send Data</button>
+
+    <script>
+        function sendToGitHubMachine() {
+            const repoUrl = document.getElementById("repoUrl").value;
+            const submoduleName = document.getElementById("submoduleName").value;
+            const submodulePath = document.getElementById("submodulePath").value;
+            const gameControllerSupport = document.getElementById("gameControllerSupport").checked;
+            const mouseKeyboardSupport = document.getElementById("mouseKeyboardSupport").checked;
+            const joystickSupport = document.getElementById("joystickSupport").checked;
+
+            const teamMembers = Array.from(document.querySelectorAll("#teamMembersList li")).map(member => {
+                const name = member.querySelector('input[placeholder="Member Name"]').value;
+                const role = member.querySelector('input[placeholder="Role"]').value;
+                const cut = member.querySelector('input[placeholder="Cut (%)"]').value;
+                return { name, role, cut };
+            });
+
+            const paymentAddresses = Array.from(document.querySelectorAll("#paymentList li")).map(address => {
+                const paymentAddress = address.querySelector('input[placeholder="Payment Address"]').value;
+                const cut = address.querySelector('input[placeholder="Cut (%)"]').value;
+                return { paymentAddress, cut };
+            });
+
+            //
