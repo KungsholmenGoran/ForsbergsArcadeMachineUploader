@@ -35,10 +35,11 @@
     <h2>System Overview</h2>
     <div class="mermaid">
         graph TD;
-            A[User Authentication] --> B[Select Repository];
+            A[User Authentication] --> B[Repository Selection];
             B --> C[Fill Metadata];
-            C --> D[Submit and automate processes];
-            D --> E[Added as a Submodule to the Arcade Machine Launcher];
+            C --> D[Submit to the System];
+            D --> E[Accept & integrate metadata.json file];
+            E --> F[Added as a Submodule to the Arcade Machine Launcher];
     </div>
 
     <h3>Forsbergs Arcade Machine Game Integration System version 0.1</h3>
