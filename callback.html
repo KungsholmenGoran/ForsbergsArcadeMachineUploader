@@ -5,10 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale: 1.0">
     <title>Callback Page</title>
     <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS if needed -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        // Initialize Mermaid for flowchart
+        mermaid.initialize({ startOnLoad: true });
+    </script>
 </head>
 <body>
     <h1>Callback Page</h1>
     <p>This page handles the GitHub OAuth callback and includes several project-related features.</p>
+
+    <!-- Directory Description and Diagram -->
+    <h2>Repository Structure Description</h2>
+    <p>You could make a repository of your built game directory, but make sure to match the following:</p>
+    <p>The name of the repository will serve as the name of your game in the arcade machine launcher, so be sure to use capital letters if needed.</p>
+    <p>The directory should include:</p>
+    <ul>
+        <li>The .exe file and any additional game binaries (the files generated in the build directory).</li>
+        <li>The license for your game.</li>
+        <li>One .gif file of your game, serving as part of your arcade machine presentation.</li>
+    </ul>
+
+    <h2>Diagram Example</h2>
+    <div class="mermaid">
+        graph TD;
+            A[Repository Name] --> B[Game Executable (.exe)];
+            A --> C[Additional Binaries];
+            A --> D[License File];
+            A --> E[Game Presentation GIF (.gif)];
+    </div>
+
+    <p>A GitHub machine generated .json file will be pushed/requested from my account/github machine adding the metadata for your game you fill on this page, including team members, description, payment/donation receiving addresses and cuts, e.g., booleans "isFree," and so on. You can manually edit this file to include desired outcomes, just remember to push.</p>
+    <p>If something goes wrong, or decisions are made from above, e.g., the school, I will notify you all through the email associated with the account you used for the OAuth.</p>
 
     <!-- Repository Git URL -->
     <h2>Repository Git URL</h2>
