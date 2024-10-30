@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS if needed -->
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <script>
-        // Initialize Mermaid for flowchart
+        // Initialize Mermaid
         mermaid.initialize({ startOnLoad: true });
     </script>
 </head>
@@ -31,9 +31,9 @@
     <div class="mermaid">
         graph TD;
             A[Repository Name] --> B[Game Executable (.exe)];
-            A[Repository Name] --> C[Additional Binaries];
-            A[Repository Name] --> D[License File];
-            A[Repository Name] --> E[Game Presentation GIF (.gif)];
+            A --> C[Additional Binaries];
+            A --> D[License File];
+            A --> E[Game Presentation GIF (.gif)];
     </div>
 
     <p>A GitHub machine generated .json file will be pushed/requested from my account/github machine adding the metadata for your game you fill on this page, including team members, description, payment/donation receiving addresses and cuts, e.g., booleans "isFree," and so on. You can manually edit this file to include desired outcomes, just remember to push.</p>
